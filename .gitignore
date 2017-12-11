@@ -40,3 +40,5 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 heroes-talents/
+
+heroes_companion\.db
