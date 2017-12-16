@@ -42,14 +42,15 @@ def init_db():
     CURSOR.execute("""CREATE TABLE IF NOT EXISTS `talents` (
 	`Id`	INTEGER,
 	`HeroId`	INTEGER,
-	`AbilityId`	TEXT UNIQUE,
+	`AbilityId`	TEXT,
 	`TalentTreeId`	TEXT,
-	`ToolTipId`	TEXT UNIQUE,
+	`ToolTipId`	TEXT,
 	`Level`	INTEGER,
 	`SortOrder`	INTEGER,
 	`Name`	TEXT,
 	`Description`	TEXT,
 	`IconFileName`	TEXT,
+    UNIQUE(HeroId, ToolTipId)
 	PRIMARY KEY(Id)
 );""")
     CONNECTION.commit()
@@ -101,13 +102,13 @@ def insert_ability_info():
                  ('trait' in ability and bool(
                      ability['trait'] is True))))
             CONNECTION.commit()
-
-init_db()
-for filename in os.listdir(HERO_JSON_PATH):
-    path_to_file = os.path.join(HERO_JSON_PATH, filename)
-    with open(path_to_file) as f:
-        hero_info = json.load(f)
-        insert_hero_info()
-        insert_talent_info()
-        insert_ability_info()
+with CONNECTION:
+    init_db()
+    for filename in os.listdir(HERO_JSON_PATH):
+        path_to_file = os.path.join(HERO_JSON_PATH, filename)
+        with open(path_to_file) as f:
+            hero_info = json.load(f)
+            insert_hero_info()
+            insert_talent_info()
+            insert_ability_info()
 CONNECTION.close()
