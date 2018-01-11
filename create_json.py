@@ -34,6 +34,6 @@ with CONNECTION:
             "abilities": abilities_results
         }
 
-        with open('publish/data.json', 'a') as f:
+        with open('./upload/data.json', 'a') as f:
             json.dump(results, f, ensure_ascii=False)
 CONNECTION.close()
