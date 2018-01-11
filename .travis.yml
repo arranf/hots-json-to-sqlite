@@ -12,8 +12,6 @@ before_install:
   - export PATH=$PATH:$HOME/.local/bin
 script:
   - ./run.sh
-  - ls
-  - pip install --user s3cmd
   - ./publish.sh
 env:
   global:
