@@ -8,7 +8,7 @@ git:
 before_install:
   - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive
-  - pip install --user awscli
+  - pip install awscli
   - export PATH=$PATH:$HOME/.local/bin
 script:
   - ./run.sh
