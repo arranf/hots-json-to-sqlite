@@ -1,0 +1,17 @@
+language: python
+python:
+  - "3.6"
+before_install:
+  - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
+script:
+  - ./run.sh
+  - ./publish.sh
+env:
+  global:
+  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+script: ./cibuild.sh
+sudo: false
+git:
+  depth: 10
+before_deploy: pip install --user s3cmd
