@@ -2,6 +2,7 @@ language: python
 python:
   - "3.6"
 git:
+  depth: 10
   submodules: false
 # Use sed to replace the SSH URL with the public URL, then initialize submodules
 before_install:
@@ -15,8 +16,5 @@ script:
 env:
   global:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-script: ./cibuild.sh
 sudo: false
-git:
-  depth: 10
 before_deploy: pip install --user s3cmd
