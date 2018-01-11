@@ -10,7 +10,7 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-DB_FILE_NAME = "heroes_companion.db"
+DB_FILE_NAME = "upload/heroes_companion.db"
 HERO_TABLE_NAME = "heroes"
 TALENTS_TABLE_NAME = "talents"
 ABILITIES_TABLE_NAME = "abilities"
