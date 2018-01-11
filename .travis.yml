@@ -12,9 +12,10 @@ before_install:
   - export PATH=$PATH:$HOME/.local/bin
 script:
   - ./run.sh
+  - ls
+  - pip install --user s3cmd
   - ./publish.sh
 env:
   global:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 sudo: false
-before_deploy: pip install --user s3cmd
