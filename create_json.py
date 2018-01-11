@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import json
 import sqlite3
 import os
@@ -33,6 +34,6 @@ with CONNECTION:
             "abilities": abilities_results
         }
 
-        with open('data.json', 'a') as f:
+        with open('publish/data.json', 'a') as f:
             json.dump(results, f, ensure_ascii=False)
 CONNECTION.close()

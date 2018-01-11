@@ -3,7 +3,7 @@ import json
 import sqlite3
 import os
 
-DB_FILE_NAME = "heroes_companion.db"
+DB_FILE_NAME = "publish/heroes_companion.db"
 HERO_JSON_PATH = "./heroes-talents/hero"
 HERO_TABLE_NAME = "heroes"
 TALENTS_TABLE_NAME = "talents"
@@ -102,6 +102,7 @@ def insert_ability_info():
                  ('trait' in ability and bool(
                      ability['trait'] is True))))
             CONNECTION.commit()
+
 with CONNECTION:
     init_db()
     for filename in os.listdir(HERO_JSON_PATH):
