@@ -42,3 +42,7 @@ pip-selfcheck.json
 heroes-talents/
 
 heroes_companion\.db
+
+heroes\.json
+
+data\.json
