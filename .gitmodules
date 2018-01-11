@@ -1,0 +1,3 @@
+[submodule "heroes-talents"]
+	path = heroes-talents
+	url = git@github.com:heroespatchnotes/heroes-talents.git
