@@ -4,4 +4,4 @@ if [ ! -d "heroes-talents" ]; then
 fi
 mkdir upload
 python3 convert_heroes.py
-python3 create_heroes.py
+python3 create_json.py
