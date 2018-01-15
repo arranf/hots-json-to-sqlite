@@ -8,5 +8,4 @@
 # Create sha.txt of repo
 touch upload/sha.txt
 cd heroes-talents && git rev-parse --verify HEAD > ../upload/sha.txt
-
-aws s3 sync upload/ s3://data.heroescompanion.com
+aws s3 sync ../upload/ s3://data.heroescompanion.com
