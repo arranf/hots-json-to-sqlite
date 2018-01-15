@@ -9,5 +9,8 @@
 touch upload/sha.txt
 cd heroes-talents && git rev-parse --verify HEAD > ../upload/sha.txt
 
+# Copy images to upload directory
+cp -r ./images/ ../upload/
+
 # Sync files to AWS
 aws s3 sync ../upload/ s3://data.heroescompanion.com
