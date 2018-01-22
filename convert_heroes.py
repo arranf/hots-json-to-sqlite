@@ -2,6 +2,7 @@
 import json
 import sqlite3
 import os
+import hashlib
 
 DB_FILE_NAME = "./upload/heroes_companion.db"
 HERO_JSON_PATH = "./heroes-talents/hero"
@@ -23,6 +24,7 @@ def init_db():
 	`Cooldown`	TEXT,
 	`ManaCost`	TEXT,
 	`Trait`	INTEGER DEFAULT 0,
+    `Sha3256` TEXT,
 	PRIMARY KEY(Id)
 );""")
     CONNECTION.commit()
@@ -36,6 +38,7 @@ def init_db():
 	`Role`	TEXT NOT NULL,
 	`Type`	TEXT NOT NULL,
 	`ReleaseDate`	TEXT,
+    `Sha3256` TEXT,
 	PRIMARY KEY(Id)
 );""")
     CONNECTION.commit()
@@ -50,14 +53,18 @@ def init_db():
 	`Name`	TEXT,
 	`Description`	TEXT,
 	`IconFileName`	TEXT,
+    `Sha3256` TEXT,
     UNIQUE(HeroId, ToolTipId)
 	PRIMARY KEY(Id)
 );""")
     CONNECTION.commit()
 
 def insert_hero_info():
+    to_hash = hero_info.get('id') + hero_info.get('name') + hero_info.get('shortName') + hero_info.get('attributeId') + hero_info.get('icon') + hero_info.get('role') + hero_info.get('type')
+    sha3_256 = hashlib.sha3_256(to_hash.encode('utf-8')).hexdigest()
+
     CURSOR.execute(
-        "INSERT OR IGNORE INTO {} (HeroId, Name, ShortName, AttributeId, IconFileName, Role, Type, ReleaseDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)".format(HERO_TABLE_NAME),
+        "INSERT OR IGNORE INTO {} (HeroId, Name, ShortName, AttributeId, IconFileName, Role, Type, ReleaseDate, Sha3256) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)".format(HERO_TABLE_NAME),
         (hero_info.get('id'),
          hero_info.get('name'),
          hero_info.get('shortName'),
@@ -65,15 +72,19 @@ def insert_hero_info():
          hero_info.get('icon'),
          hero_info.get('role'),
          hero_info.get('type'),
-         hero_info.get('releaseDate')))
+         hero_info.get('releaseDate'),
+         sha3_256
+        ))
     CONNECTION.commit()
 
 
 def insert_talent_info():
     for level, level_talents in hero_info['talents'].items():
         for talent in level_talents:
+            toHash = hero_info.get('id') + talent.get('abilityId') + talent.get('talentTreeId') + talent.get('tooltipId') + level + talent.get('name') + talent.get('description') + talent.get('name')
+            sha3_256 = hashlib.sha3_256(toHash.encode('utf-8')).hexdigest()
             CURSOR.execute(
-                "INSERT OR IGNORE INTO {} (HeroId, AbilityId, TalentTreeId, ToolTipId, Level, SortOrder, Name, Description, IconFileName) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)".format(TALENTS_TABLE_NAME),
+                "INSERT OR IGNORE INTO {} (HeroId, AbilityId, TalentTreeId, ToolTipId, Level, SortOrder, Name, Description, IconFileName, Sha3256) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)".format(TALENTS_TABLE_NAME),
                 (hero_info.get('id'),
                  talent.get('abilityId'),
                     talent.get('talentTreeId'),
@@ -82,15 +93,20 @@ def insert_talent_info():
                     talent.get('sort'),
                     talent.get('name'),
                     talent.get('description'),
-                    talent.get('icon')))
+                    talent.get('icon'),
+                    sha3_256
+                ))
             CONNECTION.commit()
 
 
 def insert_ability_info():
     for form_name, form in hero_info['abilities'].items():
         for ability in form:
+            toHash = hero_info.get('id') + ability.get('abilityId') + form_name + ability.get('name') + ability.get('description') + str(ability.get('hotkey')) + str(ability.get('cooldown')) + str(ability.get('manaCost'))
+            sha3_256 = hashlib.sha3_256(toHash.encode('utf-8')).hexdigest()
+
             CURSOR.execute(
-                "INSERT OR IGNORE INTO {} (HeroId, AbilityId, CharacterForm, Name, Description, Hotkey, Cooldown, ManaCost, Trait) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)".format(ABILITIES_TABLE_NAME),
+                "INSERT OR IGNORE INTO {} (HeroId, AbilityId, CharacterForm, Name, Description, Hotkey, Cooldown, ManaCost, Trait, Sha3256) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)".format(ABILITIES_TABLE_NAME),
                 (hero_info.get('id'),
                  ability.get('abilityId'),
                  form_name,
@@ -100,7 +116,9 @@ def insert_ability_info():
                  ability.get('cooldown'),
                  ability.get('manaCost'),
                  ('trait' in ability and bool(
-                     ability['trait'] is True))))
+                     ability['trait'] is True)),
+                 sha3_256
+                ))
             CONNECTION.commit()
 
 with CONNECTION:
