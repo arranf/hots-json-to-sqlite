@@ -14,3 +14,7 @@ cp -r ./images/ ../upload/
 
 # Sync files to AWS
 aws s3 sync ../upload/ s3://data.heroescompanion.com
+
+# Set files metadata
+aws s3 cp s3://data.heroescompanion.com s3://data.heroescompanion.com --exclude "*" --include "*.jpg" --include "*.png" \
+--recursive --metadata-directive REPLACE --cache-control max-age=604801,public
