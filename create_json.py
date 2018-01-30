@@ -4,6 +4,7 @@ import json
 import sqlite3
 import subprocess
 import datetime
+import os
 
 def dict_factory(cursor, row):
     d = {}
@@ -18,21 +19,18 @@ def get_sha(repo):
 def get_patch_number():
     import http.client
     conn = http.client.HTTPSConnection("api.github.com")
-    conn.request("GET", "/repos/heroespatchnotes/heroes-talents/commits", headers={'User-Agent': 'hero_data_to_json'})
+    conn.request("GET", "/repos/heroespatchnotes/heroes-talents/commits", headers={'User-Agent': 'hero_data_to_json', 'Authorization': 'token ' + os.environ['GITHUB_OAUTH_KEY']})
     res = conn.getresponse()
     data = res.read()
     response_data = json.loads(data.decode("utf-8"))
-    print(response_data)
     patch_number = ''
     for commit in response_data:
         if 'commit' not in commit or 'message' not in commit['commit']:
             break
         commit_message = commit['commit']['message']
-        print(commit_message)
         match = re.search(r'\d+\.\d+', commit_message)
         if match is not None:
             patch_number = match.group()
-            print(patch_number)
             break
         return patch_number
 
