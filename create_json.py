@@ -32,7 +32,8 @@ def get_patch_number():
         if match is not None:
             patch_number = match.group()
             break
-        return patch_number
+    print('Patch ' + patch_number)
+    return patch_number
 
 DB_FILE_NAME = "upload/heroes_companion.db"
 HERO_TABLE_NAME = "heroes"
