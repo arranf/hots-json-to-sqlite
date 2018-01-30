@@ -24,6 +24,8 @@ def get_patch_number():
     response_data = json.loads(data.decode("utf-8"))
     patch_number = ''
     for commit in response_data:
+        if 'commit' not in commit or 'message' not in commit['commit']:
+            break
         commit_message = commit['commit']['message']
         print(commit_message)
         match = re.search(r'\d+\.\d+', commit_message)
