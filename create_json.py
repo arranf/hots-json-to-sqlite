@@ -25,9 +25,11 @@ def get_patch_number():
     patch_number = ''
     for commit in response_data:
         commit_message = commit['commit']['message']
+        print(commit_message)
         match = re.search(r'\d+\.\d+', commit_message)
         if match is not None:
             patch_number = match.group()
+            print(patch_number)
             break
         return patch_number
 
