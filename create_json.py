@@ -22,6 +22,7 @@ def get_patch_number():
     res = conn.getresponse()
     data = res.read()
     response_data = json.loads(data.decode("utf-8"))
+    print(response_data)
     patch_number = ''
     for commit in response_data:
         if 'commit' not in commit or 'message' not in commit['commit']:
