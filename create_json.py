@@ -5,6 +5,7 @@ import sqlite3
 import subprocess
 import datetime
 import os
+import http.client
 
 def dict_factory(cursor, row):
     d = {}
@@ -17,7 +18,6 @@ def get_sha(repo):
     return sha
 
 def get_patch_number():
-    import http.client
     conn = http.client.HTTPSConnection("api.github.com")
     conn.request("GET", "/repos/heroespatchnotes/heroes-talents/commits", headers={'User-Agent': 'hero_data_to_json', 'Authorization': 'token ' + os.environ['GITHUB_OAUTH_KEY']})
     res = conn.getresponse()
@@ -35,6 +35,20 @@ def get_patch_number():
     print('Patch ' + patch_number)
     return patch_number
 
+def get_patch_date(patch_number):
+    conn = http.client.HTTPSConnection("data.heroescompanion.com")
+    conn.request("GET", "/v1/patches", headers={'User-Agent': 'hero_data_to_json'})
+    res = conn.getresponse()
+    data = res.read()
+    response_data = json.loads(data.decode("utf-8"))
+    patch_date = ''
+    for patch in response_data:
+        if 'liveDate' in patch:
+            patch_date = patch['liveDate']
+            break
+    print('Patch Date' + patch_date)
+    return patch_date
+
 DB_FILE_NAME = "upload/heroes_companion.db"
 HERO_TABLE_NAME = "heroes"
 TALENTS_TABLE_NAME = "talents"
@@ -51,10 +65,13 @@ with CONNECTION:
     talent_results = CURSOR.fetchall()
     CURSOR.execute("SELECT * FROM " + ABILITIES_TABLE_NAME)
     abilities_results = CURSOR.fetchall()
-    
+
+    patch_number = get_patch_number()
+
     results = {
         "id": datetime.datetime.utcnow().isoformat(),
-        "patch": get_patch_number(),
+        "patch": patch_number,
+        "patch_date": get_patch_date(patch_number),
         "sha": get_sha('./heroes-talents'),
         "heroes" : hero_results,
         "talents": talent_results,
