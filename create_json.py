@@ -19,7 +19,10 @@ def get_sha(repo):
 
 def get_patch_number():
     conn = http.client.HTTPSConnection("api.github.com")
-    conn.request("GET", "/repos/heroespatchnotes/heroes-talents/commits", headers={'User-Agent': 'hero_data_to_json', 'Authorization': 'token ' + os.environ['GITHUB_OAUTH_KEY']})
+    headers = {'User-Agent': 'hero_data_to_json'}
+    if 'GITHUB_OAUTH_KEY' in os.environ:
+        headers['Authorization'] = 'token ' + os.environ['GITHUB_OAUTH_KEY']
+    conn.request("GET", "/repos/heroespatchnotes/heroes-talents/commits", headers=headers)
     res = conn.getresponse()
     data = res.read()
     response_data = json.loads(data.decode("utf-8"))
@@ -46,7 +49,7 @@ def get_patch_date(patch_number):
         if 'liveDate' in patch:
             patch_date = patch['liveDate']
             break
-    print('Patch Date' + patch_date)
+    print('Patch Date: ' + patch_date)
     return patch_date
 
 DB_FILE_NAME = "upload/heroes_companion.db"
