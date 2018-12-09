@@ -54,7 +54,7 @@ def init_db():
 	`Description`	TEXT,
 	`IconFileName`	TEXT,
     `Sha3256` TEXT,
-    UNIQUE(HeroId, ToolTipId)
+    UNIQUE(HeroId, ToolTipId, TalentTreeId)
 	PRIMARY KEY(Id)
 );""")
     CONNECTION.commit()

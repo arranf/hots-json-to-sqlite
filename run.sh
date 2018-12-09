@@ -12,5 +12,7 @@ mkdir upload
 # Make a sqlite db
 python3 convert_heroes.py
 
-# Make my JSON
+# Make update JSON
 python3 create_json.py
+
+# TODO pre-populate extra DB tables (?)
